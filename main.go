@@ -9,17 +9,18 @@ import (
 )
 
 func main() {
-	// Чтение настроек
+	// Reading configs
 	if err := configs.ReadSettings(); err != nil {
 		log.Fatalf("Ошибка чтения настроек: %s", err)
 	}
 
-	// Инициализация логгера
+	// Initializing logger
 	if err := logger.Init(); err != nil {
 		return
 	}
 	logger.Info.Println("Loggers initialized successfully!")
 
+	// Connecting to db
 	if err := db.ConnectDB(); err != nil {
 		return
 	}
