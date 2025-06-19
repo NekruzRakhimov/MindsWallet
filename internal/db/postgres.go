@@ -33,6 +33,12 @@ func ConnectDB() error {
 		return err
 	}
 
+	err = db.Ping()
+	if err != nil {
+		logger.Error.Printf("[db] ConnectDB(): error during ping postgres: %s", err.Error())
+		return err
+	}
+
 	return nil
 }
 
