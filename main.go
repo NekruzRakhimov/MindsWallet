@@ -24,14 +24,15 @@ func main() {
 	if err := db.ConnectDB(); err != nil {
 		return
 	}
-
 	logger.Info.Println("Connection to database established successfully!")
 
+	// Initializing db-migrations
 	if err := db.InitMigrations(); err != nil {
 		return
 	}
 	logger.Info.Println("Migrations initialized successfully!")
 
+	// Running http-server
 	if err := controller.RunServer(); err != nil {
 		return
 	}
