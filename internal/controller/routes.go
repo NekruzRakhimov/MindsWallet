@@ -1,12 +1,10 @@
 package controller
 
 import (
-	"MindsWallet/internal/configs"
-	"MindsWallet/logger"
 	"github.com/gin-gonic/gin"
 )
 
-func RunServer() error {
+func RunServer() *gin.Engine {
 	router := gin.Default()
 
 	router.GET("/", Ping)
@@ -32,10 +30,10 @@ func RunServer() error {
 		profileG.PUT("")
 	}
 
-	if err := router.Run(configs.AppSettings.AppParams.PortRun); err != nil {
-		logger.Error.Printf("[controller] RunServer():  Error during running HTTP server: %s", err.Error())
-		return err
-	}
+	//if err := router.Run(configs.AppSettings.AppParams.PortRun); err != nil {
+	//	logger.Error.Printf("[controller] RunServer():  Error during running HTTP server: %s", err.Error())
+	//	return err
+	//}
 
-	return nil
+	return router
 }
