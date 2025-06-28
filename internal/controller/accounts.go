@@ -11,12 +11,26 @@ import (
 	"strconv"
 )
 
+// Ping godoc
+// @Summary Проверка работоспособности сервера
+// @Tags health
+// @Success 200 {object} map[string]string
+// @Router / [get]
 func Ping(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Server is up and running",
 	})
 }
 
+// GetAllAccounts godoc
+// @Summary Получить все аккаунты
+// @Description Возвращает список всех аккаунтов
+// @Tags accounts
+// @Security ApiKeyAuth
+// @Produce json
+// @Success 200 {array} models.Account
+// @Failure 401 {object} map[string]string
+// @Router /api/accounts [get]
 func GetAllAccounts(c *gin.Context) {
 	accounts, err := service.GetAllAccounts()
 	if err != nil {
@@ -27,6 +41,18 @@ func GetAllAccounts(c *gin.Context) {
 	c.JSON(http.StatusOK, accounts)
 }
 
+// GetAccountByID godoc
+// @Summary Получить аккаунт по ID
+// @Description Возвращает аккаунт по его ID
+// @Tags accounts
+// @Security ApiKeyAuth
+// @Produce json
+// @Param id path int true "ID аккаунта"
+// @Success 200 {object} models.Account
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /api/accounts/{id} [get]
 func GetAccountByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -45,6 +71,19 @@ func GetAccountByID(c *gin.Context) {
 	c.JSON(http.StatusOK, account)
 }
 
+// UpdateAccountBalance godoc
+// @Summary Изменить баланс аккаунта
+// @Description Пополнение или снятие средств
+// @Tags accounts
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param id path int true "ID аккаунта"
+// @Param operation body models.BalanceOperation true "Операция"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/accounts/balance/{id} [patch]
 func UpdateAccountBalance(c *gin.Context) {
 	userID := c.GetInt(userIDCtx)
 	if userID == 0 {

@@ -63,44 +63,44 @@ func WithdrawFromAccount(accountID int, amount float64) error {
 
 }
 
-func Transfer() error {
-	tx, err := db.GetDBConn().Begin()
-	if err != nil {
-		return translateError(err)
-	}
-
-	// получение кошелька отправителя
-	err := tx.QueryRow("SELECT * FROM user WHERE id = 1").Err()
-	if err != nil {
-		tx.Rollback()
-		return translateError(err)
-	}
-
-	// получение кошелька получателя
-	err = tx.QueryRow("SELECT * FROM user WHERE id = 2").Err()
-	if err != nil {
-		tx.Rollback()
-		return translateError(err)
-	}
-
-	// отнимаем от баланса отправителя деньги
-	err = tx.Exec("UPDATE * FROM user WHERE id = 2").Err()
-	if err != nil {
-		tx.Rollback()
-		return translateError(err)
-	}
-
-	// зачисляем деньги на баланс получателя
-	err = tx.Exec("UPDATE * FROM user WHERE id = 2").Err()
-	if err != nil {
-		tx.Rollback()
-		return translateError(err)
-	}
-
-	if err = tx.Commit(); err != nil {
-		return translateError(err)
-	}
-
-	return nil
-
-}
+//func Transfer() error {
+//	tx, err := db.GetDBConn().Begin()
+//	if err != nil {
+//		return translateError(err)
+//	}
+//
+//	// получение кошелька отправителя
+//	err = tx.QueryRow("SELECT * FROM user WHERE id = 1").Err()
+//	if err != nil {
+//		tx.Rollback()
+//		return translateError(err)
+//	}
+//
+//	// получение кошелька получателя
+//	err = tx.QueryRow("SELECT * FROM user WHERE id = 2").Err()
+//	if err != nil {
+//		tx.Rollback()
+//		return translateError(err)
+//	}
+//
+//	// отнимаем от баланса отправителя деньги
+//	err = tx.Exec("UPDATE * FROM user WHERE id = 2").Err()
+//	if err != nil {
+//		tx.Rollback()
+//		return translateError(err)
+//	}
+//
+//	// зачисляем деньги на баланс получателя
+//	err = tx.Exec("UPDATE * FROM user WHERE id = 2").Err()
+//	if err != nil {
+//		tx.Rollback()
+//		return translateError(err)
+//	}
+//
+//	if err = tx.Commit(); err != nil {
+//		return translateError(err)
+//	}
+//
+//	return nil
+//
+//}

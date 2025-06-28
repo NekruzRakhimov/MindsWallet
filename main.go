@@ -13,9 +13,20 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	_ "MindsWallet/docs"
 )
 
+// @title MindsWallet API
+// @version 1.0
+// @description API Server for MindsWallet Application
+// @securityDefinitions.apikey ApiKeyAuth
+// @host localhost:8181
+// @BasePath /
+// @in header
+// @name Authorization
 func main() {
+
 	// Reading configs
 	if err := configs.ReadSettings(); err != nil {
 		log.Fatalf("Ошибка чтения настроек: %s", err)
@@ -40,10 +51,6 @@ func main() {
 	logger.Info.Println("Migrations initialized successfully!")
 
 	// Running http-server
-	//if err := controller.RunServer(); err != nil {
-	//	return
-	//}
-
 	mainServer := new(server.Server)
 	go func() {
 		if err := mainServer.Run(configs.AppSettings.AppParams.PortRun, controller.RunServer()); err != nil {

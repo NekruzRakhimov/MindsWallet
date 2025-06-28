@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8181" # Пробрасываем порт 8001 на 8181 внутри контейнера
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432 # Указываем новый порт PostgreSQL
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=duno_db
+    volumes:
+      - ./uploads:/app/uploads   # Монтируем локальную папку uploads в контейнер
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15
+    ports:
+      - "5433:5432" # Пробрасываем порт 5433 снаружи на 5432 внутри контейнера
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: duno_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

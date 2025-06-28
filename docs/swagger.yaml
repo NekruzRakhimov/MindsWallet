@@ -1,0 +1,230 @@
+definitions:
+  models.Account:
+    properties:
+      balance:
+        type: number
+      created_at:
+        type: string
+      id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.BalanceOperation:
+    properties:
+      amount:
+        type: number
+      type:
+        type: string
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  models.UserSignIn:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: API Server for MindsWallet Application
+  title: MindsWallet API
+  version: "1.0"
+paths:
+  /:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Проверка работоспособности сервера
+      tags:
+      - health
+  /api/accounts:
+    get:
+      description: Возвращает список всех аккаунтов
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Account'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить все аккаунты
+      tags:
+      - accounts
+  /api/accounts/{id}:
+    get:
+      description: Возвращает аккаунт по его ID
+      parameters:
+      - description: ID аккаунта
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Account'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Получить аккаунт по ID
+      tags:
+      - accounts
+  /api/accounts/balance/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Пополнение или снятие средств
+      parameters:
+      - description: ID аккаунта
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Операция
+        in: body
+        name: operation
+        required: true
+        schema:
+          $ref: '#/definitions/models.BalanceOperation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Изменить баланс аккаунта
+      tags:
+      - accounts
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Вход по логину и паролю
+      parameters:
+      - description: Учётные данные
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserSignIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Авторизация пользователя
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт нового пользователя
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Регистрация пользователя
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
